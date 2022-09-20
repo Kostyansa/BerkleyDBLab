@@ -15,11 +15,15 @@ public class Service {
     @SecondaryKey(relate = Relationship.MANY_TO_ONE, relatedEntity = Business.class, name="id")
     private int businessId;
 
-    public Service(int id, String description, double price, int businessId) {
+    @SecondaryKey(relate = Relationship.MANY_TO_ONE, relatedEntity = Type.class, name="id")
+    private int typeId;
+
+    public Service(int id, String description, double price, int businessId, int typeId) {
         this.id = id;
         this.description = description;
         this.price = price;
         this.businessId = businessId;
+        this.typeId = typeId;
     }
 
     public int getId() {
@@ -52,5 +56,13 @@ public class Service {
 
     public void setBusinessId(int businessId) {
         this.businessId = businessId;
+    }
+
+    public int getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(int typeId) {
+        this.typeId = typeId;
     }
 }
