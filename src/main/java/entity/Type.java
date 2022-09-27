@@ -5,6 +5,8 @@ import com.sleepycat.persist.model.PrimaryKey;
 import com.sleepycat.persist.model.Relationship;
 import com.sleepycat.persist.model.SecondaryKey;
 
+import java.util.List;
+
 @Entity
 public class Type {
 
@@ -14,5 +16,38 @@ public class Type {
     private String name;
 
     @SecondaryKey(relate = Relationship.ONE_TO_MANY, relatedEntity = Type.class, name="id")
-    private int subtype_of;
+    private List<Integer> subtype_of;
+
+    public Type() {
+    }
+
+    public Type(int id, String name, List<Integer> subtype_of) {
+        this.id = id;
+        this.name = name;
+        this.subtype_of = subtype_of;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<Integer> getSubtype_of() {
+        return subtype_of;
+    }
+
+    public void setSubtype_of(List<Integer> subtype_of) {
+        this.subtype_of = subtype_of;
+    }
 }

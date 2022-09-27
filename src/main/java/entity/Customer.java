@@ -13,6 +13,9 @@ public class Customer {
     private String lastName;
     private String address;
 
+    public Customer() {
+    }
+
     public Customer(int id, String mail, String hashedPassword, String firstName, String lastName, String address) {
         this.id = id;
         this.mail = mail;

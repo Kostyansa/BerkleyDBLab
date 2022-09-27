@@ -12,11 +12,14 @@ public class Service {
     private String description;
     private double price;
 
-    @SecondaryKey(relate = Relationship.MANY_TO_ONE, relatedEntity = Business.class, name="id")
+    @SecondaryKey(relate = Relationship.MANY_TO_ONE, relatedEntity = Business.class, name="business")
     private int businessId;
 
-    @SecondaryKey(relate = Relationship.MANY_TO_ONE, relatedEntity = Type.class, name="id")
+    @SecondaryKey(relate = Relationship.MANY_TO_ONE, relatedEntity = Type.class, name="type")
     private int typeId;
+
+    public Service() {
+    }
 
     public Service(int id, String description, double price, int businessId, int typeId) {
         this.id = id;

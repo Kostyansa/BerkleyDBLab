@@ -13,6 +13,9 @@ public class Business {
     private String address;
     private int inn;
 
+    public Business() {
+    }
+
     public Business(int id, String mail, String hashedPassword, String name, String address, int inn) {
         this.id = id;
         this.mail = mail;

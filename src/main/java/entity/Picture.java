@@ -15,6 +15,9 @@ public class Picture {
     @SecondaryKey(relate = MANY_TO_ONE, relatedEntity = Business.class, name = "id")
     private int serviceId;
 
+    public Picture() {
+    }
+
     public Picture(int id, String path) {
         this.id = id;
         this.path = path;
