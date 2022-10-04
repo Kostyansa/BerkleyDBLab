@@ -72,4 +72,16 @@ public class Customer {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", mail='" + mail + '\'' +
+                ", hashedPassword='" + hashedPassword + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", address='" + address + '\'' +
+                '}';
+    }
 }

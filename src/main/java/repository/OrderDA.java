@@ -2,12 +2,10 @@ package repository;
 
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.persist.*;
-import entity.Customer;
 import entity.Order;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 public class OrderDA {
@@ -20,6 +18,9 @@ public class OrderDA {
         // Primary key for Customer class
         id = store.getPrimaryIndex(Integer.class, Order.class);
         customerId = store.getSecondaryIndex(id, Integer.class, "customer");
+    }
+    public EntityCursor<Order> cursor(){
+        return this.id.entities();
     }
 
     public List<Order> get(){
@@ -46,6 +47,19 @@ public class OrderDA {
         id = id == null ? 0 : id + 1;
         order.setId(id);
         return this.id.put(order);
+    }
+
+    public List<Order> getCancelledOrdersForCustomer(int customerId){
+        EntityJoin<Integer, Order> join = new EntityJoin<>(this.id);
+        join.addCondition(this.customerId, customerId);
+        try (ForwardCursor<Order> entities = join.entities()) {
+            return StreamSupport.stream(entities.spliterator(), false)
+                    .filter(Order::isCancelled)
+                    .toList();
+        }
+        catch (DatabaseException exc){
+            return new ArrayList<>();
+        }
     }
 
     public Order update(Order order){

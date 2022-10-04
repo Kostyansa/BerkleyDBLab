@@ -24,7 +24,7 @@ public class CustomerDA {
 
     public Customer save(Customer customer){
         Integer id = this.id.sortedMap().lastKey();
-        id = id == null ? 0 : id;
+        id = id == null ? 0 : id + 1;
         customer.setId(id);
         return this.id.put(customer);
     }
