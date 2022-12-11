@@ -1,9 +1,9 @@
 import com.sleepycat.persist.EntityCursor;
 import config.Database;
-import entity.Customer;
-import entity.Order;
-import repository.CustomerDA;
-import repository.OrderDA;
+import entity.Region;
+import entity.Server;
+import repository.RegionDA;
+import repository.ServerDA;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,150 +13,149 @@ public class app {
     private static final Random random = new Random();
 
     public static void Lab3(){
-        System.out.println("Lab 3 Starting");
+        System.out.println("Начало теста третьей лабораторной");
         Database.setup();
-        OrderDA orderDA = new OrderDA(Database.getStore());
-        CustomerDA customerDA = new CustomerDA(Database.getStore());
+        ServerDA ServerDA = new ServerDA(Database.getStore());
+        RegionDA RegionDA = new RegionDA(Database.getStore());
 
-        Customer customer = new Customer();
-        customer.setId(0);
+        Region region = new Region(0, "Europe", "Anarchy");
 
-        customerDA.save(customer);
+        RegionDA.save(region);
 
-        Order one = new Order(
+        Server one = new Server(
                 0,
-                new ArrayList<>(),
-                customer.getId(),
-                false
+                "Nebula",
+                "localhost:5001",
+                1
         );
 
-        Order two = new Order(
+        Server two = new Server(
                 0,
-                new ArrayList<>(),
-                customer.getId(),
-                false
+                "Star Linked",
+                "localhost:5002",
+                1
         );
 
-        Order three = new Order(
+        Server three = new Server(
                 0,
-                new ArrayList<>(),
-                customer.getId(),
-                false
+                "Galaxy One",
+                "localhost:5003",
+                1
         );
 
-        orderDA.save(one);
-        orderDA.save(two);
-        orderDA.save(three);
+        ServerDA.save(one);
+        ServerDA.save(two);
+        ServerDA.save(three);
 
-        List<Order> orders = orderDA.get();
-        System.out.println("Orders: ");
-        System.out.println(orders);
+        List<Server> Servers = ServerDA.get();
+        System.out.println("Сервера: ");
+        System.out.println(Servers);
 
-        System.out.println("Order with id = 2: ");
-        System.out.println(orderDA.get(2));
+        System.out.println("Сервер с id = 2: ");
+        System.out.println(ServerDA.get(2));
 
 
-        System.out.println("Order for customer with id = 1: ");
-        System.out.println(orderDA.getByCustomerId(1));
+        System.out.println("Сервера региона с id = 1: ");
+        System.out.println(ServerDA.getByRegionId(1));
 
-        System.out.println(orderDA.delete(2));
-        one.setCancelled(true);
-        System.out.println(orderDA.update(one));
+        System.out.println(ServerDA.delete(2));
+        one.setName("Glory");
+        System.out.println(ServerDA.update(one));
 
-        System.out.println("Order after deleting and updating: ");
-        System.out.println(orderDA.get());
+        System.out.println("Сервера после удаления и обновления: ");
+        System.out.println(ServerDA.get());
     }
 
     public static void Lab4() {
 
         Database.setup();
-        OrderDA orderDA = new OrderDA(Database.getStore());
-        CustomerDA customerDA = new CustomerDA(Database.getStore());
+        ServerDA ServerDA = new ServerDA(Database.getStore());
+        RegionDA RegionDA = new RegionDA(Database.getStore());
 
-        Customer customer = new Customer();
-        customerDA.save(customer);
-        customer = new Customer();
-        customerDA.save(customer);
+        Region region = new Region(0, "Europe", "Anarchy");
+        RegionDA.save(region);
+        region = new Region(0, "Asia", "Democracy");
+        RegionDA.save(region);
 
-        System.out.println("Customers: ");
-        System.out.println(customerDA.get());
+        System.out.println("Регионы: ");
+        System.out.println(RegionDA.get());
 
-        for (int i = 0; i < 4; i++){
-            Order order = new Order(
+        for (int i = 0; i <= 4; i++){
+            Server Server = new Server(
                     0,
-                    new ArrayList<>(),
-                    1,
-                    random.nextBoolean()
+                    "Nebula_" + i,
+                    "localhost:500" + i,
+                    random.nextInt(2) + 1
             );
-            orderDA.save(order);
+            ServerDA.save(Server);
         }
 
-        int target = 5;
+        int target = 3;
 
-        try (EntityCursor<Order> entityCursor = orderDA.cursor()) {
-            for (Order order: entityCursor){
-                if (order.getId() == target)
+        try (EntityCursor<Server> entityCursor = ServerDA.cursor()) {
+            for (Server server: entityCursor){
+                if (server.getId() == target)
                 {
-                    System.out.println("Found order with target id: ");
-                    System.out.println(order);
+                    System.out.println("Найден сервер: ");
+                    System.out.println(server);
                 }
             }
         }
 
         target = 2;
 
-        System.out.println("Orders before updating: ");
-        System.out.println(orderDA.get(target));
+        System.out.println("Сервера до обновления: ");
+        System.out.println(ServerDA.get(target));
 
-        try (EntityCursor<Order> entityCursor = orderDA.cursor()) {
-            for (Order order: entityCursor){
-                if (order.getId() == 2)
+        try (EntityCursor<Server> entityCursor = ServerDA.cursor()) {
+            for (Server server: entityCursor){
+                if (server.getId() == 2)
                 {
-                    order.setCancelled(!order.isCancelled());
-                    entityCursor.update(order);
+                    server.setRegion_id(((server.getRegion_id() - 1) % 2) + 1);
+                    entityCursor.update(server);
                 }
             }
         }
 
-        System.out.println("Orders after updating: ");
-        System.out.println(orderDA.get(target));
+        System.out.println("Сервера после обновления: ");
+        System.out.println(ServerDA.get(target));
     }
 
     public static void Lab5(){
         Database.setup();
-        OrderDA orderDA = new OrderDA(Database.getStore());
-        CustomerDA customerDA = new CustomerDA(Database.getStore());
+        ServerDA ServerDA = new ServerDA(Database.getStore());
+        RegionDA RegionDA = new RegionDA(Database.getStore());
 
-        Customer customer = new Customer();
-        customerDA.save(customer);
-        customer = new Customer();
-        customerDA.save(customer);
+        Region region = new Region(0, "Europe", "Anarchy");
+        RegionDA.save(region);
+        region = new Region(0, "Asia", "Democracy");
+        RegionDA.save(region);
 
-        System.out.println(customerDA.get());
+        System.out.println(RegionDA.get());
 
         for (int i = 0; i < 10; i++){
-            Order order = new Order(
+            Server Server = new Server(
                     0,
-                    new ArrayList<>(),
-                    1,
-                    random.nextBoolean()
+                    "Galaxy " + i,
+                    "localhost:500" + i,
+                    random.nextInt(2) + 1
             );
-            orderDA.save(order);
+            ServerDA.save(Server);
         }
         for (int i = 0; i < 10; i++){
-            Order order = new Order(
+            Server Server = new Server(
                     0,
-                    new ArrayList<>(),
-                    2,
-                    random.nextBoolean()
+                    "Nebula " + i,
+                    "localhost:500" + i,
+                    random.nextInt(2) + 1
             );
-            orderDA.save(order);
+            ServerDA.save(Server);
         }
 
-        System.out.println("Orders for customer 1: ");
-        System.out.println(orderDA.getByCustomerId(1));
-        System.out.println("Cancelled orders for customer 1: ");
-        System.out.println(orderDA.getCancelledOrdersForCustomer(1));
+        System.out.println("Сервера для региона 1: ");
+        System.out.println(ServerDA.getByRegionId(1));
+        System.out.println("Сервера Nebula для региона 1: ");
+        System.out.println(ServerDA.getServersForRegionStartingWith(1, "Nebula"));
     }
 
     public static void main(String[] args) {
